@@ -137,10 +137,11 @@ class Output(output.Output):
         if self.logbook.sleeping:
             return
 
-        if ev["eventid"].rsplit(".", 1)[0] == "cowrie.login":
+        eventid = ev["eventid"].rsplit(".", 1)
+        if eventid[0] == "cowrie.login":
             # If tolerance_attempts was set to 1 or 0, we don't need to
             # keep logs so our handling of the event is different than if > 1
-            if self.tolerance_attempts <= 1:
+            if self.tolerance_attempts <= 1 or eventid[1] == "success":
                 self.intolerant_observer(ev["src_ip"], time(), ev["username"])
             else:
                 self.tolerant_observer(ev["src_ip"], time())
